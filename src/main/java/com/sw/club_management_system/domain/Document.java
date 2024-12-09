@@ -1,5 +1,6 @@
-package com.sw.club_management_system.entity;
+package com.sw.club_management_system.domain;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -17,10 +18,11 @@ public class Document {
     public Integer id;
 
     @Column(value = "document_name")
+    @NotNull
     public String documentName;
 
     @Column(value = "club_id")
-    public Club club;
+    public Integer club;
 
     @Column(value = "file")
     public byte[] file;

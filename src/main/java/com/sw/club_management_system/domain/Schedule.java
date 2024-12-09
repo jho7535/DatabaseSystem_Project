@@ -1,5 +1,6 @@
-package com.sw.club_management_system.entity;
+package com.sw.club_management_system.domain;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -17,9 +18,11 @@ public class Schedule {
     public Integer id;
 
     @Column(value = "club_id")
-    public Club club;
+    @NotNull
+    public Integer clubId;
 
     @Column(value = "schedule_name")
+    @NotNull
     public String scheduleName;
 
     @Column(value = "date")

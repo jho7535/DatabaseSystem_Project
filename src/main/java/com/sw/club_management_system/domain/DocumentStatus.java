@@ -1,5 +1,6 @@
-package com.sw.club_management_system.entity;
+package com.sw.club_management_system.domain;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -14,12 +15,10 @@ import java.time.Instant;
 public class DocumentStatus {
     @Id
     @Column(value = "document_id")
-    public Integer id;
-
-    @Column(value = "document_id")
-    public Document document;
+    public Integer document;
 
     @Column(value = "status")
+    @NotNull
     public String status;
 
     @Column(value = "status_modified_date")

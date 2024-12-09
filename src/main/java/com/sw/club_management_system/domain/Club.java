@@ -1,5 +1,6 @@
-package com.sw.club_management_system.entity;
+package com.sw.club_management_system.domain;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -15,6 +16,7 @@ public class Club {
     public Integer id;
 
     @Column(value = "club_name")
+    @NotNull
     public String clubName;
 
     @Column(value = "contact_info")
@@ -24,6 +26,7 @@ public class Club {
     public String description;
 
     @Column(value = "supervisor")
+    @NotNull
     public String supervisor;
 
 }
