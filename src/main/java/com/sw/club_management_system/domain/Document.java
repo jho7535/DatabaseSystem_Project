@@ -25,7 +25,7 @@ public class Document {
     public Integer club;
 
     @Column(value = "file")
-    public byte[] file;
+    public String file;
 
     @Column(value = "submission_date")
     public Instant submissionDate;
