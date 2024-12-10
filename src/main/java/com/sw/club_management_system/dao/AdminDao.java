@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class AdminDao {
@@ -21,9 +23,11 @@ public class AdminDao {
     };
 
     // 이메일로 관리자 조회
-    public Admin findByEmail(String email) {
-        String sql = "SELECT * FROM admin WHERE email = ?"; // SQL 쿼리: 이메일로 관리자 찾기
-        return jdbcTemplate.queryForObject(sql, adminRowMapper, email); // 관리자 1명 반환
+    public Optional<Admin> findByEmail(String email) {
+        String sql = "SELECT * FROM admin WHERE email = ?";
+        return jdbcTemplate.query(sql, adminRowMapper, email)
+                .stream()
+                .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
 
     // 새로운 관리자 추가

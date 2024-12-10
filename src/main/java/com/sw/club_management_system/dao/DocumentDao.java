@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,9 +33,11 @@ public class DocumentDao {
     }
 
     // 특정 문서 조회 (ID로 조회)
-    public Document findById(Integer id) {
+    public Optional<Document> findById(Integer id) {
         String sql = "SELECT * FROM document WHERE document_id = ?";
-        return jdbcTemplate.queryForObject(sql, documentRowMapper, id);
+        return jdbcTemplate.query(sql, documentRowMapper, id)
+                .stream()
+                .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
 
     // 특정 동아리의 문서 조회

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,9 +33,11 @@ public class ClubDao {
     }
 
     // 특정 클럽 조회 (ID로 조회)
-    public Club findById(Integer id) {
+    public Optional<Club> findById(Integer id) {
         String sql = "SELECT * FROM club WHERE club_id = ?";
-        return jdbcTemplate.queryForObject(sql, clubRowMapper, id);
+        return jdbcTemplate.query(sql, clubRowMapper, id)
+                .stream()
+                .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
 
     // 새로운 클럽 추가

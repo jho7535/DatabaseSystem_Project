@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,9 +32,11 @@ public class UserDao {
     }
 
     // 학번으로 사용자 조회
-    public User findById(Integer studentNumber) {
-        String sql = "SELECT * FROM user WHERE student_number = ?"; // SQL 쿼리: 학번으로 사용자 찾기
-        return jdbcTemplate.queryForObject(sql, userRowMapper, studentNumber); // 사용자 1명 반환
+    public Optional<User> findById(Integer studentNumber) {
+        String sql = "SELECT * FROM user WHERE student_number = ?"; // SQL 쿼리: 학번으로 사용자 정보 가져오기
+        return jdbcTemplate.query(sql, userRowMapper, studentNumber) // RowMapper를 사용하여 결과 매핑
+                .stream()
+                .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
 
     // 새로운 사용자 추가
