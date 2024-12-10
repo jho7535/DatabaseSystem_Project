@@ -19,7 +19,7 @@ public class DocumentDao {
         Document document = new Document();
         document.setId(rs.getInt("document_id"));          // 문서 ID
         document.setDocumentName(rs.getString("document_name")); // 문서 이름
-        document.setClub(rs.getInt("club_id"));            // 클럽 ID
+        document.setClubId(rs.getInt("club_id"));            // 클럽 ID
         document.setFile(rs.getString("file"));             // 파일 데이터
         document.setSubmissionDate(rs.getTimestamp("submission_date").toInstant()); // 제출 날짜
         return document;
@@ -49,7 +49,7 @@ public class DocumentDao {
         return jdbcTemplate.update(
                 sql,
                 document.getDocumentName(),  // 문서 이름
-                document.getClub(),          // 클럽 ID
+                document.getClubId(),          // 클럽 ID
                 document.getFile()          // 파일 데이터
         );
     }
@@ -60,7 +60,7 @@ public class DocumentDao {
         return jdbcTemplate.update(
                 sql,
                 document.getDocumentName(),  // 수정할 문서 이름
-                document.getClub(),          // 수정할 클럽 ID
+                document.getClubId(),          // 수정할 클럽 ID
                 document.getFile(),          // 수정할 파일 데이터
                 document.getId()             // 조건: 문서 ID
         );

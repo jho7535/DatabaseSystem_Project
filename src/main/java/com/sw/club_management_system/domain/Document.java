@@ -22,7 +22,7 @@ public class Document {
     public String documentName;
 
     @Column(value = "club_id")
-    public Integer club;
+    public Integer clubId;
 
     @Column(value = "file")
     public String file;
