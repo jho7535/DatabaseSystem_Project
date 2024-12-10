@@ -1,6 +1,7 @@
 package com.sw.club_management_system.dao;
 
 import com.sw.club_management_system.domain.Membership;
+import com.sw.club_management_system.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,6 +25,16 @@ public class MembershipDao {
         return membership;
     };
 
+    // RowMapper: ResultSet 데이터를 User 객체로 매핑
+    private final RowMapper<User> userRowMapper = (rs, rowNum) -> {
+        User user = new User();
+        user.setStudentNumber(rs.getInt("student_number")); // 학생 번호
+        user.setEmail(rs.getString("email"));               // 이메일
+        user.setPassword(rs.getString("password"));         // 비밀번호
+        user.setDepartment(rs.getString("department"));     // 학과
+        return user;
+    };
+
     // 모든 멤버십 조회
     public List<Membership> findAll() {
         String sql = "SELECT * FROM membership";
@@ -36,19 +47,32 @@ public class MembershipDao {
         return jdbcTemplate.query(sql, membershipRowMapper, studentNumber);
     }
 
-    // 특정 클럽의 모든 멤버 조회
+    // 특정 클럽의 모든 멤버십 조회
     public List<Membership> findByClubId(Integer clubId) {
         String sql = "SELECT * FROM membership WHERE club_id = ?";
         return jdbcTemplate.query(sql, membershipRowMapper, clubId);
     }
 
     // 특정 학생이 특정 클럽에 속한 멤버십 조회
-    public Optional<Membership> findByStudentAndClub(Integer studentNumber, Integer clubId) {
+    public Optional<Membership> findByStudentNumberAndClubId(Integer studentNumber, Integer clubId) {
         String sql = "SELECT * FROM membership WHERE student_number = ? AND club_id = ?";
         return jdbcTemplate.query(sql, membershipRowMapper, studentNumber, clubId)
                 .stream()
                 .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
+
+    // 특정 클럽의 모든 멤버 조회 (User 정보를 함께 반환)
+    public List<User> findMembersByClubId(Integer clubId) {
+        String sql = """
+        SELECT u.student_number, u.email, u.password, u.department
+        FROM membership m
+        JOIN user u ON m.student_number = u.student_number
+        WHERE m.club_id = ?
+    """;
+
+        return jdbcTemplate.query(sql, userRowMapper, clubId);
+    }
+
 
     // 새로운 멤버십 추가
     public int insert(Membership membership) {
