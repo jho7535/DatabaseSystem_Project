@@ -1,6 +1,7 @@
 package com.sw.club_management_system.dao;
 
 import com.sw.club_management_system.domain.User;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -32,9 +33,17 @@ public class UserDao {
     }
 
     // 학번으로 사용자 조회
-    public Optional<User> findById(Integer studentNumber) {
+    public Optional<User> findByStudentNumber(Integer studentNumber) {
         String sql = "SELECT * FROM user WHERE student_number = ?"; // SQL 쿼리: 학번으로 사용자 정보 가져오기
         return jdbcTemplate.query(sql, userRowMapper, studentNumber) // RowMapper를 사용하여 결과 매핑
+                .stream()
+                .findFirst(); // 첫 번째 결과 반환 (Optional)
+    }
+
+    // 이메일로 사용자 조회
+    public Optional<User> findByEmail(@NotNull String email) {
+        String sql = "SELECT * FROM user WHERE email = ?"; // SQL 쿼리: 이메일로 사용자 정보 가져오기
+        return jdbcTemplate.query(sql, userRowMapper, email) // RowMapper를 사용하여 결과 매핑
                 .stream()
                 .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
