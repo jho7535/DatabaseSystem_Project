@@ -4,8 +4,13 @@ import com.sw.club_management_system.domain.Document;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,13 +53,24 @@ public class DocumentDao {
 
     // 새로운 문서 추가
     public int insert(Document document) {
-        String sql = "INSERT INTO document (document_name, club_id, file) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(
-                sql,
-                document.getDocumentName(),  // 문서 이름
-                document.getClubId(),          // 클럽 ID
-                document.getFile()          // 파일 데이터
-        );
+        String sql = "INSERT INTO document (document_name, club_id, file, submission_date) VALUES (?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, document.getDocumentName());
+            ps.setInt(2, document.getClubId()); // 동아리 ID 추가
+            ps.setString(3, document.getFile());
+            ps.setTimestamp(4, Timestamp.from(document.getSubmissionDate()));
+            return ps;
+        }, keyHolder);
+
+        // 자동 생성된 ID를 설정
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            document.setId(key.intValue());
+        }
+        return keyHolder.getKey() != null ? 1 : 0;
     }
 
     // 문서 정보 업데이트
