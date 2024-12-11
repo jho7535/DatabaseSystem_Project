@@ -5,7 +5,6 @@ import com.sw.club_management_system.dao.MembershipDao;
 import com.sw.club_management_system.domain.Club;
 import com.sw.club_management_system.domain.Membership;
 import com.sw.club_management_system.domain.User;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +17,6 @@ public class ClubService {
 
     private final ClubDao clubDao;
     private final MembershipDao membershipDao;
-
-    // 관리자 권한 확인
-    public boolean isAdmin(HttpSession session) {
-        return "admin".equals(session.getAttribute("role"));
-    }
-
-    // 회장 권한 확인
-    public boolean isPresident(Integer clubId, HttpSession session) {
-        return "president".equals(findMembership((Integer) session.getAttribute("studentNumber"), clubId).map(Membership::getRole).orElse(""));
-    }
 
     public List<Club> findAll() {
         return clubDao.findAll();

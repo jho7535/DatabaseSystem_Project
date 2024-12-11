@@ -3,6 +3,7 @@ package com.sw.club_management_system.controller;
 import com.sw.club_management_system.domain.Club;
 import com.sw.club_management_system.domain.Membership;
 import com.sw.club_management_system.domain.User;
+import com.sw.club_management_system.service.AuthorizationService;
 import com.sw.club_management_system.service.ClubService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ClubController {
 
     private final ClubService clubService;
+    private final AuthorizationService authorizationService;
 
     // 모든 동아리 조회
     @GetMapping
@@ -38,7 +40,7 @@ public class ClubController {
     @GetMapping("/{id}/members")
     public ResponseEntity<List<User>> getMembersByClubId(@PathVariable Integer id, HttpSession session) {
         // 권한 확인
-        if (!clubService.isAdmin(session) && !clubService.isPresident(id, session)) {
+        if (!authorizationService.isAdmin(session) && !authorizationService.isPresident(id, session)) {
             return ResponseEntity.status(403).body(null);
         }
         // 동아리 멤버 조회
@@ -50,7 +52,7 @@ public class ClubController {
     @GetMapping("/{id}/memberships")
     public ResponseEntity<List<Membership>> getMembershipByClubId(@PathVariable Integer id, HttpSession session) {
         // 권한 확인
-        if (!clubService.isAdmin(session) && !clubService.isPresident(id, session)) {
+        if (!authorizationService.isAdmin(session) && !authorizationService.isPresident(id, session)) {
             return ResponseEntity.status(403).body(null);
         }
         // 동아리 멤버십 조회
@@ -62,7 +64,7 @@ public class ClubController {
     @PostMapping
     public ResponseEntity<String> createClub(@RequestBody @Valid Club club, HttpSession session) {
         // 권한 확인
-        if (!clubService.isAdmin(session)) {
+        if (!authorizationService.isAdmin(session)) {
             return ResponseEntity.status(403).body("Forbidden");
         }
         clubService.create(club);
@@ -73,7 +75,7 @@ public class ClubController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateClub(@PathVariable Integer id, @RequestBody @Valid Club club, HttpSession session) {
         // 권한 확인
-        if (!clubService.isAdmin(session) && !clubService.isPresident(id, session)) {
+        if (!authorizationService.isAdmin(session) && !authorizationService.isPresident(id, session)) {
             return ResponseEntity.status(403).body(null);
         }
         boolean isUpdated = clubService.update(id, club);
@@ -87,7 +89,7 @@ public class ClubController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteClub(@PathVariable Integer id, HttpSession session) {
         // 권한 확인
-        if (!clubService.isAdmin(session)) {
+        if (!authorizationService.isAdmin(session)) {
             return ResponseEntity.status(403).body(null);
         }
         boolean isDeleted = clubService.delete(id);
