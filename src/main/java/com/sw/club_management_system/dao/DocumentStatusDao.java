@@ -18,7 +18,7 @@ public class DocumentStatusDao {
     // RowMapper: ResultSet 데이터를 DocumentStatus 객체로 매핑
     private final RowMapper<DocumentStatus> documentStatusRowMapper = (rs, rowNum) -> {
         DocumentStatus documentStatus = new DocumentStatus();
-        documentStatus.setDocument(rs.getInt("document_id")); // 문서 ID
+        documentStatus.setDocumentId(rs.getInt("document_id")); // 문서 ID
         documentStatus.setStatus(rs.getString("status"));     // 상태
         documentStatus.setStatusModifiedDate(
                 rs.getTimestamp("status_modified_date").toInstant() // 상태 변경 날짜
@@ -45,7 +45,7 @@ public class DocumentStatusDao {
         String sql = "INSERT INTO document_status (document_id, status) VALUES (?, ?)";
         return jdbcTemplate.update(
                 sql,
-                documentStatus.getDocument(),         // 문서 ID
+                documentStatus.getDocumentId(),         // 문서 ID
                 documentStatus.getStatus()         // 상태
         );
     }
@@ -56,7 +56,7 @@ public class DocumentStatusDao {
         return jdbcTemplate.update(
                 sql,
                 documentStatus.getStatus(),           // 수정할 상태
-                documentStatus.getDocument()          // 조건: 문서 ID
+                documentStatus.getDocumentId()          // 조건: 문서 ID
         );
     }
 

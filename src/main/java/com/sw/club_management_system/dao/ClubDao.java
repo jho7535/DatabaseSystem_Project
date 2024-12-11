@@ -40,6 +40,14 @@ public class ClubDao {
                 .findFirst(); // 첫 번째 결과 반환 (Optional)
     }
 
+    // 특정 클럽 조회 (이름으로 조회)
+    public Optional<Club> findByName(String name) {
+        String sql = "SELECT * FROM club WHERE club_name = ?";
+        return jdbcTemplate.query(sql, clubRowMapper, name)
+                .stream()
+                .findFirst(); // 첫 번째 결과 반환 (Optional)
+    }
+
     // 새로운 클럽 추가
     public int insert(Club club) {
         String sql = "INSERT INTO club (club_name, contact_info, description, supervisor) VALUES (?, ?, ?, ?)";
