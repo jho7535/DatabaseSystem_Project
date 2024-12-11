@@ -40,7 +40,7 @@ public class ClubController {
     @GetMapping("/{id}/members")
     public ResponseEntity<List<User>> getMembersByClubId(@PathVariable Integer id, HttpSession session) {
         // 권한 확인
-        if (!authorizationService.isAdmin(session) && !authorizationService.isPresident(id, session)) {
+        if (!authorizationService.isAdmin(session) && !authorizationService.isPresidentInClub(id, session)) {
             return ResponseEntity.status(403).body(null);
         }
         // 동아리 멤버 조회
@@ -52,7 +52,7 @@ public class ClubController {
     @GetMapping("/{id}/memberships")
     public ResponseEntity<List<Membership>> getMembershipByClubId(@PathVariable Integer id, HttpSession session) {
         // 권한 확인
-        if (!authorizationService.isAdmin(session) && !authorizationService.isPresident(id, session)) {
+        if (!authorizationService.isAdmin(session) && !authorizationService.isPresidentInClub(id, session)) {
             return ResponseEntity.status(403).body(null);
         }
         // 동아리 멤버십 조회
@@ -75,7 +75,7 @@ public class ClubController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateClub(@PathVariable Integer id, @RequestBody @Valid Club club, HttpSession session) {
         // 권한 확인
-        if (!authorizationService.isAdmin(session) && !authorizationService.isPresident(id, session)) {
+        if (!authorizationService.isAdmin(session) && !authorizationService.isPresidentInClub(id, session)) {
             return ResponseEntity.status(403).body(null);
         }
         boolean isUpdated = clubService.update(id, club);
