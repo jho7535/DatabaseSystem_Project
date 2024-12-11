@@ -74,17 +74,11 @@ public class AuthorizationService {
             return false; // 학번이 없는 경우 권한 없음
         }
 
-        // DAO에서 일정 정보 가져오기
+        // 일정 확인 및 동아리와 사용자 학번에 기반한 회장 권한 확인
         return scheduleDao.findById(scheduleId)
-                .map(schedule -> {
-                    Integer clubId = schedule.getClubId(); // 일정의 클럽 ID 가져오기
-
-                    // 동아리와 사용자 학번에 기반한 회장 권한 확인
-                    return membershipDao.findByStudentNumberAndClubId(studentNumber, clubId)
-                            .map(Membership::getRole)
-                            .filter("president"::equals) // role이 "president"인지 확인
-                            .isPresent();
-                })
+                .map(schedule -> membershipDao.findByStudentNumberAndClubId(studentNumber, schedule.getClubId())
+                        .map(membership -> "president".equals(membership.getRole()))
+                        .orElse(false))
                 .orElse(false); // 일정이 없는 경우 false 반환
     }
 }

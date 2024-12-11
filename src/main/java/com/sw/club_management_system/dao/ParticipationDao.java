@@ -50,13 +50,9 @@ public class ParticipationDao {
     }
 
     // 새로운 참여 데이터 추가
-    public int insert(Participation participation) {
+    public int insert(Integer scheduleId, Integer studentNumber) {
         String sql = "INSERT INTO participation (student_number, schedule_id) VALUES (?, ?)";
-        return jdbcTemplate.update(
-                sql,
-                participation.getStudentNumber(), // 학생 번호
-                participation.getScheduleId()     // 일정 ID
-        );
+        return jdbcTemplate.update(sql, studentNumber, scheduleId);
     }
 
     // 특정 학생과 특정 일정의 참여 데이터 삭제
