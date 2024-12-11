@@ -11,7 +11,7 @@ import java.time.Instant;
 
 @Setter
 @Getter
-@Table(name = "document")
+@Table(name = "documentId")
 public class Document {
     @Id
     @Column(value = "document_id")

@@ -15,7 +15,7 @@ import java.time.Instant;
 public class DocumentStatus {
     @Id
     @Column(value = "document_id")
-    public Integer document;
+    public Integer documentId;
 
     @Column(value = "status")
     @NotNull
