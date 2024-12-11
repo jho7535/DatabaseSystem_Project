@@ -2,6 +2,7 @@ package com.sw.club_management_system.service;
 
 import com.sw.club_management_system.dao.DocumentDao;
 import com.sw.club_management_system.dao.MembershipDao;
+import com.sw.club_management_system.dao.ScheduleDao;
 import com.sw.club_management_system.domain.Membership;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class AuthorizationService {
 
     private final MembershipDao membershipDao;
     private final DocumentDao documentDao;
+    private final ScheduleDao scheduleDao;
 
     // 관리자 권한 확인
     public boolean isAdmin(HttpSession session) {
@@ -32,6 +34,12 @@ public class AuthorizationService {
                 .orElse("");
 
         return "president".equals(role);
+    }
+
+    // 동아리 회원 권한 확인
+    public boolean isMember(Integer clubId, HttpSession session) {
+        return membershipDao.findByStudentNumberAndClubId((Integer) session.getAttribute("studentNumber"), clubId)
+                .isPresent();
     }
 
     // 문서에 기반한 동아리 회장 권한 확인
@@ -55,5 +63,28 @@ public class AuthorizationService {
                             .isPresent();
                 })
                 .orElse(false); // 문서가 없는 경우 false 반환
+    }
+
+    // 일정에 기반한 동아리 회장 권한 확인
+    public boolean isPresidentInSchedule(Integer scheduleId, HttpSession session) {
+        // 세션에서 학번 가져오기
+        Integer studentNumber = (Integer) session.getAttribute("studentNumber");
+
+        if (studentNumber == null) {
+            return false; // 학번이 없는 경우 권한 없음
+        }
+
+        // DAO에서 일정 정보 가져오기
+        return scheduleDao.findById(scheduleId)
+                .map(schedule -> {
+                    Integer clubId = schedule.getClubId(); // 일정의 클럽 ID 가져오기
+
+                    // 동아리와 사용자 학번에 기반한 회장 권한 확인
+                    return membershipDao.findByStudentNumberAndClubId(studentNumber, clubId)
+                            .map(Membership::getRole)
+                            .filter("president"::equals) // role이 "president"인지 확인
+                            .isPresent();
+                })
+                .orElse(false); // 일정이 없는 경우 false 반환
     }
 }
