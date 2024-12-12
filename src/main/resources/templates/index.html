@@ -147,7 +147,7 @@
     <nav>
         <div th:if="${isLoggedIn}">
             <span th:text="'로그인 ID: ' + ${userId}"></span>
-            <a href="/logout">로그아웃</a>
+            <a href="/users/logout">로그아웃</a>
         </div>
         <div th:if="${!isLoggedIn}">
             <a href="/users/login">로그인</a>
