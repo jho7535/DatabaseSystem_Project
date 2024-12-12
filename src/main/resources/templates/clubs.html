@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동아리 관리 시스템 - 동아리 메인</title>
+    <style>
+        /* Flexbox 레이아웃 적용 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 15px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: white;
+            color: #0056b3;
+        }
+
+        /* 메뉴 스타일 */
+        .menu {
+            background-color: #e0e0e0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .menu a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        /* 메인 스타일 */
+        main {
+            padding: 40px 20px;
+        }
+
+        main h2 {
+            font-size: 28px;
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .club-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            padding: 0 10px;
+        }
+
+        .club-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .club-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .club-card h3 {
+            font-size: 20px;
+            color: #0056b3;
+            margin-bottom: 10px;
+        }
+
+        .club-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .club-card a {
+            text-decoration: none;
+            color: white;
+            background-color: #0056b3;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .club-card a:hover {
+            background-color: #003d82;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더 -->
+<header>
+    <h1><a href="/" style="color: white; text-decoration: none;">동아리 관리 시스템</a></h1>
+    <nav>
+        <div th:if="${isLoggedIn}">
+            <span th:text="'로그인 ID: ' + ${userId}"></span>
+            <a href="/users/logout">로그아웃</a>
+        </div>
+        <div th:if="${!isLoggedIn}">
+            <a href="/users/login">로그인</a>
+            <a href="/users/register">회원가입</a>
+        </div>
+    </nav>
+</header>
+
+<!-- 메뉴 -->
+<div class="menu">
+    <a href="/clubs">동아리 홈</a>
+    <a href="/clubs/new">새 동아리 추가</a>
+</div>
+
+<!-- 메인 콘텐츠 -->
+<main>
+    <h2>동아리 리스트</h2>
+    <section class="club-list">
+        <div class="club-card" th:each="club : ${clubs}">
+            <!-- 동아리 이름 표시 -->
+            <h3 th:text="${club.clubName}">동아리 이름</h3>
+            <!-- 동아리 설명 표시 -->
+            <p th:text="${club.description}">동아리 설명</p>
+            <a th:href="@{/clubs/{id}(id=${club.id})}">자세히 보기</a>
+        </div>
+    </section>
+</main>
+
+<!-- 푸터 -->
+<footer>
+    &copy; 2024 Club Management System. All rights reserved.
+</footer>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동아리 관리 시스템 - 동아리 정보</title>
+    <style>
+        /* Flexbox 레이아웃 적용 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 15px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: white;
+            color: #0056b3;
+        }
+
+        /* 메뉴 스타일 */
+        .menu {
+            background-color: #e0e0e0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .menu a {
+            text-decoration: none;
+            margin: 0 15px;
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        /* 메인 스타일 */
+        main {
+            padding: 40px 20px;
+        }
+
+        main h2 {
+            font-size: 28px;
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0056b3;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-container textarea {
+            resize: none;
+        }
+
+        .form-container button {
+            text-decoration: none;
+            color: white;
+            background-color: #0056b3;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #003d82;
+        }
+
+        .form-container .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더 -->
+<header>
+    <h1><a href="/" style="color: white; text-decoration: none;">동아리 관리 시스템</a></h1>
+    <nav>
+        <div th:if="${isLoggedIn}">
+            <span th:text="'로그인 ID: ' + ${userId}"></span>
+            <a href="/users/logout">로그아웃</a>
+        </div>
+        <div th:if="${!isLoggedIn}">
+            <a href="/users/login">로그인</a>
+            <a href="/users/register">회원가입</a>
+        </div>
+    </nav>
+</header>
+
+<!-- 메뉴 -->
+<div class="menu">
+    <a href="/clubs">동아리 홈</a>
+    <a href="/clubs/new">새 동아리 추가</a>
+</div>
+
+<!-- 메인 콘텐츠 -->
+<main>
+    <h2>동아리 정보</h2>
+    <section class="form-container">
+        <form th:action="${club.id != null ? '/clubs/' + club.id + '/edit' : '/clubs'}" method="post">
+            <label for="clubName">동아리 이름</label>
+            <input type="text" id="clubName" name="clubName" th:value="${club.clubName}" required placeholder="동아리 이름을 입력하세요">
+
+            <label for="description">동아리 설명</label>
+            <textarea id="description" name="description" rows="4" th:text="${club.description}" placeholder="동아리 설명을 입력하세요"></textarea>
+
+            <label for="contactInfo">연락처</label>
+            <input type="text" id="contactInfo" name="contactInfo" th:value="${club.contactInfo}" placeholder="연락처를 입력하세요">
+
+            <label for="supervisor">담당 교수</label>
+            <input type="text" id="supervisor" name="supervisor" th:value="${club.supervisor}" required placeholder="담당 교수 이름을 입력하세요">
+
+            <div class="actions">
+                <button type="submit">저장</button>
+                <a href="/clubs" style="text-decoration: none; color: white; background-color: #0056b3; padding: 10px 20px; border-radius: 5px; font-size: 16px; text-align: center;">취소</a>
+            </div>
+        </form>
+    </section>
+</main>
+
+<!-- 푸터 -->
+<footer>
+    &copy; 2024 Club Management System. All rights reserved.
+</footer>
+</body>
+</html>

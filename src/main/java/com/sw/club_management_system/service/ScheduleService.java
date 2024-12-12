@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,11 @@ public class ScheduleService {
         return scheduleDao.findById(scheduleId)
                 .map(Schedule::getClubId)
                 .orElse(null);
+    }
+
+    // 특정 일정 조회
+    public Optional<Schedule> findScheduleById(Integer scheduleId) {
+        return scheduleDao.findById(scheduleId);
     }
 
     // 스케줄 생성

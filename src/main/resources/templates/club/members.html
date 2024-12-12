@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>동아리 관리 시스템 - 멤버 정보</title>
+    <style>
+        /* Flexbox 레이아웃 적용 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px; /* 통일된 스타일 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px; /* 통일된 스타일 */
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 15px; /* 통일된 스타일 */
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        header nav a:hover {
+            background-color: white;
+            color: #0056b3;
+        }
+
+        /* 메뉴 스타일 */
+        .menu {
+            background-color: #e0e0e0;
+            padding: 10px; /* 통일된 스타일 */
+            text-align: center;
+        }
+
+        .menu a {
+            text-decoration: none;
+            margin: 0 15px; /* 통일된 스타일 */
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        /* 메인 스타일 */
+        main {
+            padding: 40px 20px; /* 통일된 스타일 */
+        }
+
+        main h2 {
+            font-size: 28px; /* 통일된 스타일 */
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #003d82;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 20px 0; /* 통일된 스타일 */
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더 -->
+<header>
+    <h1><a href="/" style="color: white; text-decoration: none;">동아리 관리 시스템</a></h1>
+    <nav>
+        <div th:if="${isLoggedIn}">
+            <span th:text="'로그인 ID: ' + ${userId}"></span>
+            <a href="/users/logout">로그아웃</a>
+        </div>
+        <div th:if="${!isLoggedIn}">
+            <a href="/users/login">로그인</a>
+            <a href="/users/register">회원가입</a>
+        </div>
+    </nav>
+</header>
+
+<!-- 메뉴 -->
+<div class="menu">
+    <a href="/clubs">동아리 홈</a>
+    <a href="/clubs/new">새 동아리 추가</a>
+</div>
+
+<!-- 메인 콘텐츠 -->
+<main>
+    <h2 th:text="'동아리: ' + ${clubName} + ' - 멤버 목록'">동아리 멤버 목록</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>학번</th>
+            <th>이메일</th>
+            <th>학과</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.studentNumber}">학번</td>
+            <td th:text="${member.email}">이메일</td>
+            <td th:text="${member.department}">학과</td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/clubs" class="back-btn">돌아가기</a>
+</main>
+
+<!-- 푸터 -->
+<footer>
+    &copy; 2024 Club Management System. All rights reserved.
+</footer>
+</body>
+</html>

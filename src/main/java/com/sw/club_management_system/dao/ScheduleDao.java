@@ -79,4 +79,10 @@ public class ScheduleDao {
         String sql = "DELETE FROM schedule WHERE schedule_id = ?";
         return jdbcTemplate.update(sql, id); // 조건: 스케줄 ID
     }
+
+    // 특정 클럽의 모든 스케줄 삭제
+    public int deleteByClubId(Integer clubId) {
+        String sql = "DELETE FROM schedule WHERE club_id = ?";
+        return jdbcTemplate.update(sql, clubId); // 조건: 클럽 ID
+    }
 }

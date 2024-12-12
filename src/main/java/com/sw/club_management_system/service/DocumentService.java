@@ -39,6 +39,11 @@ public class DocumentService {
         return documentDao.findById(id);
     }
 
+    // 특정 문서 상태 조회
+    public Optional<DocumentStatus> findStatusByDocumentId(Integer documentId) {
+        return documentStatusDao.findByDocumentId(documentId);
+    }
+
     // 특정 동아리의 문서 조회
     public List<Document> findByClubId(Integer clubId) {
         return documentDao.findByClubId(clubId);

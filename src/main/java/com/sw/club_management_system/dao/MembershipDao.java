@@ -101,4 +101,10 @@ public class MembershipDao {
         String sql = "DELETE FROM membership WHERE student_number = ? AND club_id = ?";
         return jdbcTemplate.update(sql, studentNumber, clubId);
     }
+
+    // 특정 클럽의 모든 멤버십 삭제
+    public int deleteByClubId(Integer clubId) {
+        String sql = "DELETE FROM membership WHERE club_id = ?";
+        return jdbcTemplate.update(sql, clubId);
+    }
 }

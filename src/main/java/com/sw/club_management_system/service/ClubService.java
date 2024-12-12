@@ -2,6 +2,7 @@ package com.sw.club_management_system.service;
 
 import com.sw.club_management_system.dao.ClubDao;
 import com.sw.club_management_system.dao.MembershipDao;
+import com.sw.club_management_system.dao.ScheduleDao;
 import com.sw.club_management_system.domain.Club;
 import com.sw.club_management_system.domain.Membership;
 import com.sw.club_management_system.domain.User;
@@ -17,6 +18,7 @@ public class ClubService {
 
     private final ClubDao clubDao;
     private final MembershipDao membershipDao;
+    private final ScheduleDao scheduleDao;
 
     public List<Club> findAll() {
         return clubDao.findAll();
@@ -55,6 +57,12 @@ public class ClubService {
     }
 
     public boolean delete(Integer id) {
+        // 연관된 멤버십 삭제
+        membershipDao.deleteByClubId(id);
+
+        // 연관된 스케줄 삭제
+        scheduleDao.deleteByClubId(id);
+
         if (clubDao.findById(id).isEmpty()) {
             return false;
         }
