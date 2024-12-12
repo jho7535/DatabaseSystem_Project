@@ -174,12 +174,12 @@
 
         <div class="actions">
             <!-- 일정 참여 -->
-            <form th:action="@{/schedules/participation/{id}(id=${schedule.id})}" method="post">
+            <form th:if="${!isParticipating}" th:action="@{/schedules/participation/{id}(id=${schedule.id})}" method="post">
                 <button type="submit">일정 참여</button>
             </form>
 
             <!-- 일정 참여 취소 -->
-            <form th:action="@{/schedules/participation/{id}/cancel(id=${schedule.id})}" method="post">
+            <form th:if="${isParticipating}" th:action="@{/schedules/participation/{id}/cancel(id=${schedule.id})}" method="post">
                 <button type="submit">일정 참여 취소</button>
             </form>
 

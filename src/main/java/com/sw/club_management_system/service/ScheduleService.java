@@ -43,6 +43,12 @@ public class ScheduleService {
         return scheduleDao.findById(scheduleId);
     }
 
+    // 특정 일정의 특정 학생 참여 여부 조회
+    public boolean isParticipating(Integer scheduleId, Integer studentNumber) {
+        return participationDao.findByStudentAndSchedule(studentNumber, scheduleId)
+                .isPresent();
+    }
+
     // 스케줄 생성
     public boolean createSchedule(ScheduleRequest scheduleRequest, HttpSession session) {
         Integer clubId = membershipDao.findByStudentNumber((Integer) session.getAttribute("studentNumber"))

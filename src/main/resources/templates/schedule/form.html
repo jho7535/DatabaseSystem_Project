@@ -168,7 +168,7 @@
 <main>
     <h2>일정 정보</h2>
     <section class="form-container">
-        <form th:action="${schedule.id != null ? '/schedules/' + schedule.id + '/edit' : '/schedules'}" method="post">
+        <form th:action="${schedule?.id != null ? '/schedules/' + schedule.id + '/edit' : '/schedules'}" method="post">
             <label for="scheduleName">스케줄 이름</label>
             <input type="text" id="scheduleName" name="scheduleName" th:value="${schedule.scheduleName}" required placeholder="스케줄 이름을 입력하세요">
 

@@ -55,7 +55,12 @@ public class ScheduleViewController {
             return "error"; // error.html
         }
 
+        // 참여 여부 확인
+        boolean isParticipating = scheduleService.isParticipating(scheduleId,
+                (Integer) session.getAttribute("studentNumber"));
+
         model.addAttribute("schedule", schedule);
+        model.addAttribute("isParticipating", isParticipating);
 
         return "schedule/details"; // schedule/details.html
     }
@@ -74,7 +79,7 @@ public class ScheduleViewController {
             return "error"; // error.html
         }
 
-        model.addAttribute("schedule", new ScheduleRequest());
+        model.addAttribute("schedule", new Schedule());
         return "schedule/form"; // schedule/form.html
     }
 
@@ -88,14 +93,14 @@ public class ScheduleViewController {
         // 권한 확인
         if (!authorizationService.isPresident(session)) {
             model.addAttribute("error", "You do not have permission to create schedules.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         boolean isCreated = scheduleService.createSchedule(scheduleRequest, session);
 
         if (!isCreated) {
             model.addAttribute("error", "Failed to create the schedule. Please try again.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         return "redirect:/schedules"; // 성공 시 일정 목록 페이지로 리다이렉트
@@ -140,7 +145,7 @@ public class ScheduleViewController {
         // 권한 확인 (해당 스케줄에 대한 회장 권한이 있는지 체크)
         if (!authorizationService.isPresidentInSchedule(scheduleId, session)) {
             model.addAttribute("error", "You do not have permission to edit this schedule.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         // 수정 처리
@@ -148,7 +153,7 @@ public class ScheduleViewController {
 
         if (!isUpdated) {
             model.addAttribute("error", "Failed to update the schedule. Please try again.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         return "redirect:/schedules/" + scheduleId; // 수정 성공 시 상세 페이지로 리다이렉트
@@ -167,7 +172,7 @@ public class ScheduleViewController {
         // 권한 확인
         if (!authorizationService.isMember(clubId, session)) {
             model.addAttribute("error", "You do not have permission to participate in this schedule.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         // 참여 처리
@@ -176,7 +181,7 @@ public class ScheduleViewController {
 
         if (!isParticipated) {
             model.addAttribute("error", "Failed to participate in the schedule. Please try again.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         return "redirect:/schedules/" + scheduleId; // 일정 상세 페이지로 리다이렉트
@@ -195,7 +200,7 @@ public class ScheduleViewController {
         // 권한 확인
         if (!authorizationService.isMember(clubId, session)) {
             model.addAttribute("error", "You do not have permission to cancel participation in this schedule.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         // 참여 취소 처리
@@ -204,10 +209,34 @@ public class ScheduleViewController {
 
         if (!isCanceled) {
             model.addAttribute("error", "Failed to cancel participation in the schedule. Please try again.");
-            return "error"; // error.html
+            return "redirect:/error"; // error.html
         }
 
         return "redirect:/schedules/" + scheduleId; // 일정 상세 페이지로 리다이렉트
+    }
+
+    // 일정 삭제 처리
+    @PostMapping("/{scheduleId}/delete")
+    public String handleScheduleDeletion(
+            @PathVariable Integer scheduleId,
+            HttpSession session,
+            Model model) {
+
+        // 권한 확인 (해당 스케줄에 대한 회장 권한이 있는지 체크)
+        if (!authorizationService.isPresidentInSchedule(scheduleId, session)) {
+            model.addAttribute("error", "You do not have permission to delete this schedule.");
+            return "redirect:/error"; // error.html
+        }
+
+        // 삭제 처리
+        boolean isDeleted = scheduleService.deleteSchedule(scheduleId);
+
+        if (!isDeleted) {
+            model.addAttribute("error", "Failed to delete the schedule. Please try again.");
+            return "redirect:/error"; // error.html
+        }
+
+        return "redirect:/schedules"; // 삭제 성공 시 일정 목록 페이지로 리다이렉트
     }
 
 }
